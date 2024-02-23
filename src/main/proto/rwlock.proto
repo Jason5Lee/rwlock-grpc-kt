@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package rwlock;
+
+option java_multiple_files = true;
+option java_package = "me.jason5lee.rwlock_grpc";
+option java_outer_classname = "Protos";
+
+service RwLockMap {
+    rpc Get(GetRequest) returns (GetResponse);
+    rpc Update(UpdateRequest) returns (UpdateResponse);
+}
+
+message GetRequest {
+    string key = 1;
+}
+
+message GetResponse {
+    string value = 1;
+}
+
+enum UpdateType {
+    CREATE = 0;
+    UPDATE = 1;
+    UPSERT = 2;
+    DELETE = 3;
+}
+
+message UpdateRequest {
+    string key = 1;
+    string value = 2;
+    UpdateType type = 3;
+}
+
+message UpdateResponse {}
