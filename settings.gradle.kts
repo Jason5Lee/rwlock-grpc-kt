@@ -1,1 +1,1 @@
-rootProject.name = "rwlock-grpc-vertx-kt"
+rootProject.name = "rwlock-grpc-kt"

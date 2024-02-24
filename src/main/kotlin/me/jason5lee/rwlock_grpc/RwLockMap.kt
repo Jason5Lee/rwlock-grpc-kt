@@ -98,7 +98,7 @@ class RwLockMap : RwLockMapGrpcKt.RwLockMapCoroutineImplBase() {
         }
 
         var newStatus: Long
-        var waitToRead: Long = 0
+        var waitToRead: Long
         do {
             oldStatus = status.get()
             assert(oldStatus and READER_MASK == 0L)

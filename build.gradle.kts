@@ -17,26 +17,20 @@ repositories {
     mavenCentral()
 }
 
-val mainVerticleName = "me.jason5lee.rwlock_grpc.MainVerticle"
 val launcherClassName = "io.vertx.core.Launcher"
 
-val watchForChange = "src/**/*"
-val doOnChange = "${projectDir}/gradlew classes"
-
 application {
-    mainClass.set(launcherClassName)
+    mainClass.set("me.jason5lee.rwlock_grpc.RwLockMapServerKt")
 }
 
 dependencies {
-    implementation(platform(libs.vertx.stack.depchain))
-    implementation("io.vertx:vertx-grpc-server")
-    implementation("io.vertx:vertx-lang-kotlin")
-    implementation("io.vertx:vertx-lang-kotlin-coroutines")
     implementation(kotlin("stdlib-jdk8"))
+    implementation(libs.kotlinx.coroutines.core)
 
+    runtimeOnly(libs.grpc.netty)
+    implementation(libs.grpc.protobuf)
     implementation(libs.protobuf.kotlin)
     implementation(libs.grpc.kotlin.stub)
-    testImplementation("io.vertx:vertx-junit5")
     testImplementation(libs.junit.jupiter)
 }
 
@@ -45,9 +39,6 @@ compileKotlin.kotlinOptions.jvmTarget = "17"
 
 tasks.withType<ShadowJar> {
     archiveClassifier.set("fat")
-    manifest {
-        attributes(mapOf("Main-Verticle" to mainVerticleName))
-    }
     mergeServiceFiles()
 }
 
@@ -56,16 +47,6 @@ tasks.withType<Test> {
     testLogging {
         events = setOf(PASSED, SKIPPED, FAILED)
     }
-}
-
-tasks.withType<JavaExec> {
-    args = listOf(
-        "run",
-        mainVerticleName,
-        "--redeploy=$watchForChange",
-        "--launcher-class=$launcherClassName",
-        "--on-redeploy=$doOnChange"
-    )
 }
 
 sourceSets {
